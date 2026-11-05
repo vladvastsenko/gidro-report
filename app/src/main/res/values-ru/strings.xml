@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ГидроОтчёт</string>
+    <string name="language">Язык</string>
     <string name="object_name">Объект</string>
     <string name="address">Адрес</string>
     <string name="area">Участок / ось / помещение</string>
@@ -30,5 +31,13 @@
     <string name="pdf_notes">Замечания и описание работ</string>
     <string name="pdf_photos">ФОТОМАТЕРИАЛЫ</string>
     <string name="pdf_photo">Фото</string>
+    <string name="pdf_custom_fields">ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ</string>
+    <string name="custom_fields">Свои поля</string>
+    <string name="add_custom_field">Добавить своё поле</string>
+    <string name="custom_field_name">Название поля</string>
+    <string name="custom_field_value">Значение поля</string>
+    <string name="delete">Удалить</string>
+    <string name="choose_logo">Выбрать логотип</string>
+    <string name="logo_selected">Логотип выбран</string>
     <string name="share_pdf">Отправить PDF</string>
 </resources>

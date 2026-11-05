@@ -14,10 +14,10 @@ import android.provider.MediaStore
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -52,6 +53,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -59,15 +61,22 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     data class PhotoItem(
         val uri: Uri,
         val comment: MutableState<String>
     )
 
-    private val photos = mutableStateListOf<PhotoItem>()
+    data class CustomField(
+        val name: MutableState<String>,
+        val value: MutableState<String>
+    )
 
+    private val photos = mutableStateListOf<PhotoItem>()
+    private val customFields = mutableStateListOf<CustomField>()
+
+    private var logoUri: Uri? = null
     private var pendingCameraUri: Uri? = null
 
     private val takePicture = registerForActivityResult(
@@ -89,7 +98,24 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val pickLogo = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            logoUri = uri
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val savedLanguage = getSharedPreferences("settings", MODE_PRIVATE)
+            .getString("language", "")
+
+        if (!savedLanguage.isNullOrBlank()) {
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.forLanguageTags(savedLanguage)
+            )
+        }
+
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -97,6 +123,17 @@ class MainActivity : ComponentActivity() {
                 ReportScreen()
             }
         }
+    }
+
+    private fun applyLanguage(languageTag: String) {
+        getSharedPreferences("settings", MODE_PRIVATE)
+            .edit()
+            .putString("language", languageTag)
+            .apply()
+
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(languageTag)
+        )
     }
 
     private fun launchCamera() {
@@ -147,6 +184,46 @@ class MainActivity : ComponentActivity() {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                item {
+                    Text(stringResource(R.string.language), fontSize = 18.sp)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FilterChip(
+                            selected = false,
+                            onClick = { applyLanguage("fi") },
+                            label = { Text("Suomi") }
+                        )
+                        FilterChip(
+                            selected = false,
+                            onClick = { applyLanguage("ru") },
+                            label = { Text("Русский") }
+                        )
+                        FilterChip(
+                            selected = false,
+                            onClick = { applyLanguage("en") },
+                            label = { Text("English") }
+                        )
+                    }
+                }
+
+                item {
+                    OutlinedButton(
+                        onClick = {
+                            pickLogo.launch(
+                                PickVisualMediaRequest(
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                                )
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.choose_logo))
+                    }
+
+                    if (logoUri != null) {
+                        Text(stringResource(R.string.logo_selected))
+                    }
+                }
+
                 item {
                     OutlinedTextField(
                         value = objectName,
@@ -226,6 +303,56 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 4
                     )
+                }
+
+                item {
+                    Text(stringResource(R.string.custom_fields), fontSize = 18.sp)
+                }
+
+                items(customFields) { field ->
+                    Card {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = field.name.value,
+                                onValueChange = { field.name.value = it },
+                                label = { Text(stringResource(R.string.custom_field_name)) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            OutlinedTextField(
+                                value = field.value.value,
+                                onValueChange = { field.value.value = it },
+                                label = { Text(stringResource(R.string.custom_field_value)) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            OutlinedButton(
+                                onClick = { customFields.remove(field) },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(stringResource(R.string.delete))
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    Button(
+                        onClick = {
+                            customFields.add(
+                                CustomField(
+                                    name = mutableStateOf(""),
+                                    value = mutableStateOf("")
+                                )
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.add_custom_field))
+                    }
                 }
 
                 item {
@@ -435,6 +562,34 @@ class MainActivity : ComponentActivity() {
                 y += layout.height + 8f
             }
 
+            logoUri?.let { uri ->
+                loadBitmap(uri, 400)?.let { logo ->
+                    val maxLogoWidth = 120f
+                    val maxLogoHeight = 60f
+                    val scale = minOf(
+                        maxLogoWidth / logo.width,
+                        maxLogoHeight / logo.height
+                    )
+
+                    val logoWidth = logo.width * scale
+                    val logoHeight = logo.height * scale
+
+                    val scaledLogo = Bitmap.createScaledBitmap(
+                        logo,
+                        logoWidth.toInt().coerceAtLeast(1),
+                        logoHeight.toInt().coerceAtLeast(1),
+                        true
+                    )
+
+                    canvas.drawBitmap(
+                        scaledLogo,
+                        pageWidth - 50f - logoWidth,
+                        40f,
+                        null
+                    )
+                }
+            }
+
             canvas.drawText(getString(R.string.pdf_title), 50f, y, titlePaint)
             y += 30f
 
@@ -448,72 +603,78 @@ class MainActivity : ComponentActivity() {
             addText(getString(R.string.pdf_result), result)
             addText(getString(R.string.pdf_notes), notes)
 
-            y += 8f
-            canvas.drawText(getString(R.string.pdf_photos), 50f, y, titlePaint)
-            y += 25f
+            if (customFields.isNotEmpty()) {
+                y += 8f
+                canvas.drawText(getString(R.string.pdf_custom_fields), 50f, y, titlePaint)
+                y += 25f
 
-            val margin = 50f
-            val gap = 15f
-            val cellWidth = (pageWidth - margin * 2 - gap) / 2f
-            val cellHeight = 230f
-            val commentHeight = 45f
-            val rowHeight = cellHeight + commentHeight + gap
-
-            photos.forEachIndexed { index, photo ->
-                val positionInPage = index % 4
-                val column = positionInPage % 2
-                val row = positionInPage / 2
-
-                if (positionInPage == 0 && index > 0) {
-                    nextPage()
+                customFields.forEach { field ->
+                    addText(
+                        field.name.value.ifBlank { "—" },
+                        field.value.value
+                    )
                 }
+            }
 
-                val x = margin + column * (cellWidth + gap)
-                val imageTop = y + row * rowHeight
+            photos.chunked(4).forEach { photoChunk ->
+                nextPage()
 
-                canvas.drawText(
-                    "${getString(R.string.pdf_photo)} ${index + 1}",
-                    x,
-                    imageTop,
-                    labelPaint
-                )
+                canvas.drawText(getString(R.string.pdf_photos), 50f, y, titlePaint)
+                y += 25f
 
-                val bitmap = loadBitmap(photo.uri, 1200)
+                val margin = 50f
+                val gap = 15f
+                val cellWidth = (pageWidth - margin * 2 - gap) / 2f
+                val cellHeight = 220f
+                val commentHeight = 40f
+                val rowHeight = cellHeight + commentHeight + gap
 
-                if (bitmap != null) {
-                    val scale = minOf(
-                        cellWidth / bitmap.width,
-                        cellHeight / bitmap.height
+                photoChunk.forEachIndexed { indexInChunk, photo ->
+                    val globalIndex = photos.indexOf(photo)
+                    val column = indexInChunk % 2
+                    val row = indexInChunk / 2
+
+                    val x = margin + column * (cellWidth + gap)
+                    val imageTop = y + row * rowHeight
+
+                    canvas.drawText(
+                        "${getString(R.string.pdf_photo)} ${globalIndex + 1}",
+                        x,
+                        imageTop,
+                        labelPaint
                     )
 
-                    val drawWidth = bitmap.width * scale
-                    val drawHeight = bitmap.height * scale
-                    val drawX = x + (cellWidth - drawWidth) / 2f
-                    val drawY = imageTop + 14f + (cellHeight - drawHeight) / 2f
+                    loadBitmap(photo.uri, 1200)?.let { bitmap ->
+                        val scale = minOf(
+                            cellWidth / bitmap.width,
+                            cellHeight / bitmap.height
+                        )
 
-                    val scaled = Bitmap.createScaledBitmap(
-                        bitmap,
-                        drawWidth.toInt().coerceAtLeast(1),
-                        drawHeight.toInt().coerceAtLeast(1),
-                        true
+                        val drawWidth = bitmap.width * scale
+                        val drawHeight = bitmap.height * scale
+                        val drawX = x + (cellWidth - drawWidth) / 2f
+                        val drawY = imageTop + 14f + (cellHeight - drawHeight) / 2f
+
+                        val scaled = Bitmap.createScaledBitmap(
+                            bitmap,
+                            drawWidth.toInt().coerceAtLeast(1),
+                            drawHeight.toInt().coerceAtLeast(1),
+                            true
+                        )
+
+                        canvas.drawBitmap(scaled, drawX, drawY, null)
+                    }
+
+                    val comment = photo.comment.value
+                        .ifBlank { "—" }
+                        .take(80)
+
+                    canvas.drawText(
+                        comment,
+                        x,
+                        imageTop + cellHeight + 24f,
+                        commentPaint
                     )
-
-                    canvas.drawBitmap(scaled, drawX, drawY, null)
-                }
-
-                val comment = photo.comment.value
-                    .ifBlank { "—" }
-                    .take(90)
-
-                canvas.drawText(
-                    comment,
-                    x,
-                    imageTop + cellHeight + 26f,
-                    commentPaint
-                )
-
-                if (positionInPage == 3) {
-                    y += 4 * rowHeight
                 }
             }
 

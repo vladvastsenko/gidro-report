@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Waterproofing Report</string>
+    <string name="language">Language</string>
     <string name="object_name">Object</string>
     <string name="address">Address</string>
     <string name="area">Area / axis / room</string>
@@ -30,5 +31,13 @@
     <string name="pdf_notes">Comments and work description</string>
     <string name="pdf_photos">PHOTO DOCUMENTATION</string>
     <string name="pdf_photo">Photo</string>
+    <string name="pdf_custom_fields">ADDITIONAL DATA</string>
+    <string name="custom_fields">Custom fields</string>
+    <string name="add_custom_field">Add custom field</string>
+    <string name="custom_field_name">Field name</string>
+    <string name="custom_field_value">Field value</string>
+    <string name="delete">Delete</string>
+    <string name="choose_logo">Choose logo</string>
+    <string name="logo_selected">Logo selected</string>
     <string name="share_pdf">Share PDF</string>
 </resources>

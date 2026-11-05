@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Kosteuseraportti</string>
+    <string name="language">Kieli</string>
     <string name="object_name">Kohde</string>
     <string name="address">Osoite</string>
     <string name="area">Alue / akseli / tila</string>
@@ -30,5 +31,13 @@
     <string name="pdf_notes">Huomiot ja työn kuvaus</string>
     <string name="pdf_photos">KUVA-aineisto</string>
     <string name="pdf_photo">Kuva</string>
+    <string name="pdf_custom_fields">LISÄTIEDOT</string>
+    <string name="custom_fields">Omat kentät</string>
+    <string name="add_custom_field">Lisää oma kenttä</string>
+    <string name="custom_field_name">Kentän nimi</string>
+    <string name="custom_field_value">Kentän arvo</string>
+    <string name="delete">Poista</string>
+    <string name="choose_logo">Valitse logo</string>
+    <string name="logo_selected">Logo valittu</string>
     <string name="share_pdf">Jaa PDF</string>
 </resources>
