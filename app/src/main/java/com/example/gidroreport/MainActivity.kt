@@ -66,6 +66,19 @@ class MainActivity : ComponentActivity() {
 
     private val photos = mutableStateListOf<PhotoItem>()
 
+    private var pendingCameraUri: Uri? = null
+
+    private val takePicture = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            pendingCameraUri?.let { uri ->
+                photos.add(PhotoItem(uri, ""))
+            }
+        }
+        pendingCameraUri = null
+    }
+
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -81,6 +94,26 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 ReportScreen()
             }
+        }
+    }
+
+    private fun launchCamera() {
+        val values = ContentValues().apply {
+            put(
+                MediaStore.Images.DISPLAY_NAME,
+                "GidroReport_${System.currentTimeMillis()}.jpg"
+            )
+            put(MediaStore.Images.MIME_TYPE, "image/jpeg")
+        }
+
+        val uri = contentResolver.insert(
+            MediaStore.Images.EXTERNAL_CONTENT_URI,
+            values
+        )
+
+        if (uri != null) {
+            pendingCameraUri = uri
+            takePicture.launch(uri)
         }
     }
 
@@ -195,6 +228,15 @@ class MainActivity : ComponentActivity() {
 
                 item {
                     Button(
+                        onClick = { launchCamera() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Сделать фото")
+                    }
+                }
+
+                item {
+                    Button(
                         onClick = {
                             pickMedia.launch(
                                 PickVisualMediaRequest(
@@ -204,7 +246,7 @@ class MainActivity : ComponentActivity() {
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Добавить фото")
+                        Text("Добавить фото из галереи")
                     }
                 }
 
