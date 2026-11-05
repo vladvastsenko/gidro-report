@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Kosteuseraportti</string>
+    <string name="object_name">Kohde</string>
+    <string name="address">Osoite</string>
+    <string name="area">Alue / akseli / tila</string>
+    <string name="waterproofing_type">Kosteuseristystyyppi</string>
+    <string name="inspector">Tarkastaja</string>
+    <string name="contractor">Urakoitsija</string>
+    <string name="inspection_result">Tarkastuksen tulos</string>
+    <string name="result_compliant">Vaatimusten mukainen</string>
+    <string name="result_with_comments">Huomioita</string>
+    <string name="result_non_compliant">Ei vaatimusten mukainen</string>
+    <string name="notes">Yleiset huomiot ja työn kuvaus</string>
+    <string name="take_photo">Ota kuva</string>
+    <string name="choose_photo">Valitse kuva galleriasta</string>
+    <string name="photo_comment">Kuvan kommentti</string>
+    <string name="create_pdf">Luo ja lähetä PDF</string>
+    <string name="creating_pdf">Luodaan PDF:ää...</string>
+    <string name="pdf_created">PDF luotu ja valmis lähetettäväksi</string>
+    <string name="pdf_failed">PDF:n luominen epäonnistui</string>
+    <string name="pdf_title">KOSTEUSERISTYKSEN TARKASTUSRAPORTTI</string>
+    <string name="pdf_date">Päivämäärä ja aika</string>
+    <string name="pdf_object">Kohde</string>
+    <string name="pdf_address">Osoite</string>
+    <string name="pdf_area">Alue / akseli / tila</string>
+    <string name="pdf_type">Kosteuseristystyyppi</string>
+    <string name="pdf_inspector">Tarkastaja</string>
+    <string name="pdf_contractor">Urakoitsija</string>
+    <string name="pdf_result">Tarkastuksen tulos</string>
+    <string name="pdf_notes">Huomiot ja työn kuvaus</string>
+    <string name="pdf_photos">KUVA-aineisto</string>
+    <string name="pdf_photo">Kuva</string>
+    <string name="share_pdf">Jaa PDF</string>
+</resources>

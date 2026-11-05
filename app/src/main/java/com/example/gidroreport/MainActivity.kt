@@ -39,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +63,7 @@ class MainActivity : ComponentActivity() {
 
     data class PhotoItem(
         val uri: Uri,
-        var comment: String
+        val comment: MutableState<String>
     )
 
     private val photos = mutableStateListOf<PhotoItem>()
@@ -73,7 +75,7 @@ class MainActivity : ComponentActivity() {
     ) { success ->
         if (success) {
             pendingCameraUri?.let { uri ->
-                photos.add(PhotoItem(uri, ""))
+                photos.add(PhotoItem(uri, mutableStateOf("")))
             }
         }
         pendingCameraUri = null
@@ -83,7 +85,7 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
-            photos.add(PhotoItem(uri, ""))
+            photos.add(PhotoItem(uri, mutableStateOf("")))
         }
     }
 
@@ -123,11 +125,11 @@ class MainActivity : ComponentActivity() {
         var objectName by remember { mutableStateOf("") }
         var address by remember { mutableStateOf("") }
         var area by remember { mutableStateOf("") }
-        var waterproofingType by remember { mutableStateOf("Обмазочная") }
+        var waterproofingType by remember { mutableStateOf("") }
         var inspector by remember { mutableStateOf("") }
         var contractor by remember { mutableStateOf("") }
         var notes by remember { mutableStateOf("") }
-        var result by remember { mutableStateOf("Соответствует") }
+        var result by remember { mutableStateOf("") }
         var statusMessage by remember { mutableStateOf("") }
 
         val scope = rememberCoroutineScope()
@@ -135,7 +137,7 @@ class MainActivity : ComponentActivity() {
 
         Scaffold(
             topBar = {
-                TopAppBar(title = { Text("ГидроОтчёт") })
+                TopAppBar(title = { Text(stringResource(R.string.app_name)) })
             }
         ) { innerPadding ->
             LazyColumn(
@@ -149,7 +151,7 @@ class MainActivity : ComponentActivity() {
                     OutlinedTextField(
                         value = objectName,
                         onValueChange = { objectName = it },
-                        label = { Text("Объект") },
+                        label = { Text(stringResource(R.string.object_name)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -158,7 +160,7 @@ class MainActivity : ComponentActivity() {
                     OutlinedTextField(
                         value = address,
                         onValueChange = { address = it },
-                        label = { Text("Адрес") },
+                        label = { Text(stringResource(R.string.address)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -167,7 +169,7 @@ class MainActivity : ComponentActivity() {
                     OutlinedTextField(
                         value = area,
                         onValueChange = { area = it },
-                        label = { Text("Участок / ось / помещение") },
+                        label = { Text(stringResource(R.string.area)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -176,7 +178,7 @@ class MainActivity : ComponentActivity() {
                     OutlinedTextField(
                         value = waterproofingType,
                         onValueChange = { waterproofingType = it },
-                        label = { Text("Тип гидроизоляции") },
+                        label = { Text(stringResource(R.string.waterproofing_type)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -185,7 +187,7 @@ class MainActivity : ComponentActivity() {
                     OutlinedTextField(
                         value = inspector,
                         onValueChange = { inspector = it },
-                        label = { Text("Инспектор") },
+                        label = { Text(stringResource(R.string.inspector)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -194,18 +196,18 @@ class MainActivity : ComponentActivity() {
                     OutlinedTextField(
                         value = contractor,
                         onValueChange = { contractor = it },
-                        label = { Text("Подрядчик") },
+                        label = { Text(stringResource(R.string.contractor)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
 
                 item {
-                    Text("Результат осмотра", fontSize = 18.sp)
+                    Text(stringResource(R.string.inspection_result), fontSize = 18.sp)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         listOf(
-                            "Соответствует",
-                            "С замечаниями",
-                            "Не соответствует"
+                            stringResource(R.string.result_compliant),
+                            stringResource(R.string.result_with_comments),
+                            stringResource(R.string.result_non_compliant)
                         ).forEach { option ->
                             FilterChip(
                                 selected = result == option,
@@ -220,7 +222,7 @@ class MainActivity : ComponentActivity() {
                     OutlinedTextField(
                         value = notes,
                         onValueChange = { notes = it },
-                        label = { Text("Общие замечания и описание работ") },
+                        label = { Text(stringResource(R.string.notes)) },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 4
                     )
@@ -231,7 +233,7 @@ class MainActivity : ComponentActivity() {
                         onClick = { launchCamera() },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Сделать фото")
+                        Text(stringResource(R.string.take_photo))
                     }
                 }
 
@@ -246,7 +248,7 @@ class MainActivity : ComponentActivity() {
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Добавить фото из галереи")
+                        Text(stringResource(R.string.choose_photo))
                     }
                 }
 
@@ -258,7 +260,7 @@ class MainActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             scope.launch {
-                                statusMessage = "Создаю PDF..."
+                                statusMessage = getString(R.string.creating_pdf)
                                 val uri = createPdf(
                                     objectName = objectName,
                                     address = address,
@@ -273,15 +275,15 @@ class MainActivity : ComponentActivity() {
 
                                 statusMessage = if (uri != null) {
                                     sharePdf(uri)
-                                    "PDF создан и открыт для отправки"
+                                    getString(R.string.pdf_created)
                                 } else {
-                                    "Не удалось создать PDF"
+                                    getString(R.string.pdf_failed)
                                 }
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Создать и отправить PDF")
+                        Text(stringResource(R.string.create_pdf))
                     }
                 }
 
@@ -308,7 +310,7 @@ class MainActivity : ComponentActivity() {
                 bitmap?.let {
                     Image(
                         bitmap = it.asImageBitmap(),
-                        contentDescription = "Фото участка",
+                        contentDescription = stringResource(R.string.pdf_photo),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(220.dp),
@@ -317,9 +319,9 @@ class MainActivity : ComponentActivity() {
                 }
 
                 OutlinedTextField(
-                    value = photo.comment,
-                    onValueChange = { photo.comment = it },
-                    label = { Text("Комментарий к фото") },
+                    value = photo.comment.value,
+                    onValueChange = { photo.comment.value = it },
+                    label = { Text(stringResource(R.string.photo_comment)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -381,13 +383,18 @@ class MainActivity : ComponentActivity() {
 
             val titlePaint = Paint().apply {
                 color = Color.BLACK
-                textSize = 20f
+                textSize = 18f
                 isFakeBoldText = true
             }
 
             val labelPaint = Paint().apply {
                 color = Color.DKGRAY
-                textSize = 11f
+                textSize = 10f
+            }
+
+            val commentPaint = Paint().apply {
+                color = Color.BLACK
+                textSize = 9f
             }
 
             val textPaint = TextPaint().apply {
@@ -418,66 +425,101 @@ class MainActivity : ComponentActivity() {
                 }
 
                 canvas.drawText(label, 50f, y, labelPaint)
-                y += 16f
+                y += 14f
 
                 canvas.save()
                 canvas.translate(50f, y)
                 layout.draw(canvas)
                 canvas.restore()
 
-                y += layout.height + 10f
+                y += layout.height + 8f
             }
 
-            canvas.drawText("ОТЧЁТ О КОНТРОЛЕ ГИДРОИЗОЛЯЦИИ", 50f, y, titlePaint)
-            y += 35f
-
-            addText("Дата и время", dateText)
-            addText("Объект", objectName)
-            addText("Адрес", address)
-            addText("Участок / ось / помещение", area)
-            addText("Тип гидроизоляции", waterproofingType)
-            addText("Инспектор", inspector)
-            addText("Подрядчик", contractor)
-            addText("Результат осмотра", result)
-            addText("Замечания и описание работ", notes)
-
-            y += 10f
-            canvas.drawText("ФОТОМАТЕРИАЛЫ", 50f, y, titlePaint)
+            canvas.drawText(getString(R.string.pdf_title), 50f, y, titlePaint)
             y += 30f
 
+            addText(getString(R.string.pdf_date), dateText)
+            addText(getString(R.string.pdf_object), objectName)
+            addText(getString(R.string.pdf_address), address)
+            addText(getString(R.string.pdf_area), area)
+            addText(getString(R.string.pdf_type), waterproofingType)
+            addText(getString(R.string.pdf_inspector), inspector)
+            addText(getString(R.string.pdf_contractor), contractor)
+            addText(getString(R.string.pdf_result), result)
+            addText(getString(R.string.pdf_notes), notes)
+
+            y += 8f
+            canvas.drawText(getString(R.string.pdf_photos), 50f, y, titlePaint)
+            y += 25f
+
+            val margin = 50f
+            val gap = 15f
+            val cellWidth = (pageWidth - margin * 2 - gap) / 2f
+            val cellHeight = 230f
+            val commentHeight = 45f
+            val rowHeight = cellHeight + commentHeight + gap
+
             photos.forEachIndexed { index, photo ->
-                val bitmap = loadBitmap(photo.uri, 1000)
+                val positionInPage = index % 4
+                val column = positionInPage % 2
+                val row = positionInPage / 2
+
+                if (positionInPage == 0 && index > 0) {
+                    nextPage()
+                }
+
+                val x = margin + column * (cellWidth + gap)
+                val imageTop = y + row * rowHeight
+
+                canvas.drawText(
+                    "${getString(R.string.pdf_photo)} ${index + 1}",
+                    x,
+                    imageTop,
+                    labelPaint
+                )
+
+                val bitmap = loadBitmap(photo.uri, 1200)
 
                 if (bitmap != null) {
-                    val maxWidth = pageWidth - 100
-                    val scale = maxWidth.toFloat() / bitmap.width
-                    val imageHeight = bitmap.height * scale
+                    val scale = minOf(
+                        cellWidth / bitmap.width,
+                        cellHeight / bitmap.height
+                    )
 
-                    if (y + imageHeight + 80 > pageHeight - 60) {
-                        nextPage()
-                    }
+                    val drawWidth = bitmap.width * scale
+                    val drawHeight = bitmap.height * scale
+                    val drawX = x + (cellWidth - drawWidth) / 2f
+                    val drawY = imageTop + 14f + (cellHeight - drawHeight) / 2f
 
                     val scaled = Bitmap.createScaledBitmap(
                         bitmap,
-                        maxWidth,
-                        imageHeight.toInt(),
+                        drawWidth.toInt().coerceAtLeast(1),
+                        drawHeight.toInt().coerceAtLeast(1),
                         true
                     )
 
-                    canvas.drawText("Фото ${index + 1}", 50f, y, labelPaint)
-                    y += 16f
+                    canvas.drawBitmap(scaled, drawX, drawY, null)
+                }
 
-                    canvas.drawBitmap(scaled, 50f, y, null)
-                    y += imageHeight + 10f
+                val comment = photo.comment.value
+                    .ifBlank { "—" }
+                    .take(90)
 
-                    addText("Комментарий", photo.comment)
-                    y += 10f
+                canvas.drawText(
+                    comment,
+                    x,
+                    imageTop + cellHeight + 26f,
+                    commentPaint
+                )
+
+                if (positionInPage == 3) {
+                    y += 4 * rowHeight
                 }
             }
 
             document.finishPage(page)
 
-            val fileName = "Гидроотчёт_${SimpleDateFormat(
+            val fileName = "GidroReport_${SimpleDateFormat(
                 "yyyyMMdd_HHmmss",
                 Locale.getDefault()
             ).format(Date())}.pdf"
@@ -510,6 +552,6 @@ class MainActivity : ComponentActivity() {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        startActivity(Intent.createChooser(intent, "Отправить PDF"))
+        startActivity(Intent.createChooser(intent, getString(R.string.share_pdf)))
     }
 }
