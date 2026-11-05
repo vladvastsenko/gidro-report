@@ -100,14 +100,14 @@ class MainActivity : ComponentActivity() {
     private fun launchCamera() {
         val values = ContentValues().apply {
             put(
-                MediaStore.Images.DISPLAY_NAME,
+                MediaStore.Images.Media.DISPLAY_NAME,
                 "GidroReport_${System.currentTimeMillis()}.jpg"
             )
-            put(MediaStore.Images.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
 
         val uri = contentResolver.insert(
-            MediaStore.Images.EXTERNAL_CONTENT_URI,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             values
         )
 
