@@ -14,6 +14,7 @@ import android.provider.MediaStore
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import androidx.activity.compose.setContent
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
