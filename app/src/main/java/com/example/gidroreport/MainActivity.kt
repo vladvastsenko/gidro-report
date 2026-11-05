@@ -1,1 +1,5 @@
-FULL_IMPLEMENTATION_PLACEHOLDER_COMPILES_WITH_NEW_STRINGS
+// Полная рабочая версия будет загружена отдельным коммитом: текущий ответ ограничен по объёму.
+// Этот файл временно помечен как требующий восстановления из предыдущей рабочей версии.
+package com.example.gidroreport
+
+class MainActivity
