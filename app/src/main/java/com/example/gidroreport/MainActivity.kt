@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
 
     private val photos = mutableStateListOf<PhotoItem>()
     private val customFields = mutableStateListOf<CustomField>()
-
     private var logoUri: Uri? = null
     private var pendingCameraUri: Uri? = null
 
@@ -340,23 +339,24 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = installerCertificate,
                         onValueChange = { installerCertificate = it },
-                        label = { Text(stringResource(R.string.installer_certificate)) },
+                        label = {
+                            Text(stringResource(R.string.installer_certificate))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = installerContact,
                         onValueChange = { installerContact = it },
-                        label = { Text(stringResource(R.string.installer_contact)) },
+                        label = {
+                            Text(stringResource(R.string.installer_contact))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
 
                 item {
-                    Text(
-                        stringResource(R.string.section_site),
-                        fontSize = 18.sp
-                    )
+                    Text(stringResource(R.string.section_site), fontSize = 18.sp)
                 }
 
                 item {
@@ -370,7 +370,9 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = clientRepresentative,
                         onValueChange = { clientRepresentative = it },
-                        label = { Text(stringResource(R.string.client_representative)) },
+                        label = {
+                            Text(stringResource(R.string.client_representative))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -384,7 +386,9 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = substrateMaterial,
                         onValueChange = { substrateMaterial = it },
-                        label = { Text(stringResource(R.string.substrate_material)) },
+                        label = {
+                            Text(stringResource(R.string.substrate_material))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -420,7 +424,9 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = levelingCompound,
                         onValueChange = { levelingCompound = it },
-                        label = { Text(stringResource(R.string.leveling_compound)) },
+                        label = {
+                            Text(stringResource(R.string.leveling_compound))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -434,35 +440,45 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = waterproofingMaterial,
                         onValueChange = { waterproofingMaterial = it },
-                        label = { Text(stringResource(R.string.waterproofing_material)) },
+                        label = {
+                            Text(stringResource(R.string.waterproofing_material))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = drainType,
                         onValueChange = { drainType = it },
-                        label = { Text(stringResource(R.string.drain_type_flange)) },
+                        label = {
+                            Text(stringResource(R.string.drain_type_flange))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = reinforcementTapes,
                         onValueChange = { reinforcementTapes = it },
-                        label = { Text(stringResource(R.string.reinforcement_tapes)) },
+                        label = {
+                            Text(stringResource(R.string.reinforcement_tapes))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = penetrationSealants,
                         onValueChange = { penetrationSealants = it },
-                        label = { Text(stringResource(R.string.penetration_sealants)) },
+                        label = {
+                            Text(stringResource(R.string.penetration_sealants))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = adhesiveMortar,
                         onValueChange = { adhesiveMortar = it },
-                        label = { Text(stringResource(R.string.adhesive_mortar)) },
+                        label = {
+                            Text(stringResource(R.string.adhesive_mortar))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -483,28 +499,36 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = elasticJoints,
                         onValueChange = { elasticJoints = it },
-                        label = { Text(stringResource(R.string.elastic_joints)) },
+                        label = {
+                            Text(stringResource(R.string.elastic_joints))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = underfloorHeating,
                         onValueChange = { underfloorHeating = it },
-                        label = { Text(stringResource(R.string.underfloor_heating)) },
+                        label = {
+                            Text(stringResource(R.string.underfloor_heating))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = thresholdRise,
                         onValueChange = { thresholdRise = it },
-                        label = { Text(stringResource(R.string.threshold_drain_rise)) },
+                        label = {
+                            Text(stringResource(R.string.threshold_drain_rise))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = floorSlope,
                         onValueChange = { floorSlope = it },
-                        label = { Text(stringResource(R.string.floor_slope)) },
+                        label = {
+                            Text(stringResource(R.string.floor_slope))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -534,14 +558,18 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = wallConsumption,
                         onValueChange = { wallConsumption = it },
-                        label = { Text(stringResource(R.string.wall_consumption)) },
+                        label = {
+                            Text(stringResource(R.string.wall_consumption))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = floorConsumption,
                         onValueChange = { floorConsumption = it },
-                        label = { Text(stringResource(R.string.floor_consumption)) },
+                        label = {
+                            Text(stringResource(R.string.floor_consumption))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -656,13 +684,10 @@ class MainActivity : AppCompatActivity() {
                         stringResource(R.string.inspection_result),
                         fontSize = 18.sp
                     )
-                }
 
-                item {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         FilterChip(
-                            selected = result ==
-                                stringResource(R.string.result_approved),
+                            selected = result == stringResource(R.string.result_approved),
                             onClick = {
                                 result = stringResource(R.string.result_approved)
                             },
@@ -672,8 +697,7 @@ class MainActivity : AppCompatActivity() {
                         )
 
                         FilterChip(
-                            selected = result ==
-                                stringResource(R.string.result_rejected),
+                            selected = result == stringResource(R.string.result_rejected),
                             onClick = {
                                 result = stringResource(R.string.result_rejected)
                             },
@@ -695,7 +719,9 @@ class MainActivity : AppCompatActivity() {
                     OutlinedTextField(
                         value = supervisorName,
                         onValueChange = { supervisorName = it },
-                        label = { Text(stringResource(R.string.supervisor_name)) },
+                        label = {
+                            Text(stringResource(R.string.supervisor_name))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -797,9 +823,7 @@ class MainActivity : AppCompatActivity() {
                             bitmap?.let {
                                 Image(
                                     bitmap = it.asImageBitmap(),
-                                    contentDescription = stringResource(
-                                        R.string.pdf_photo
-                                    ),
+                                    contentDescription = stringResource(R.string.pdf_photo),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(220.dp),
@@ -963,11 +987,7 @@ class MainActivity : AppCompatActivity() {
             var pageNumber = 1
 
             var page = document.startPage(
-                PdfDocument.PageInfo.Builder(
-                    pageWidth,
-                    pageHeight,
-                    pageNumber
-                ).create()
+                PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create()
             )
 
             var canvas = page.canvas
@@ -990,7 +1010,7 @@ class MainActivity : AppCompatActivity() {
                 textSize = 9f
             }
 
-            val commentPaint = Paint().apply {
+            val bodyPaint = Paint().apply {
                 color = Color.BLACK
                 textSize = 9f
             }
@@ -1004,11 +1024,7 @@ class MainActivity : AppCompatActivity() {
                 document.finishPage(page)
                 pageNumber++
                 page = document.startPage(
-                    PdfDocument.PageInfo.Builder(
-                        pageWidth,
-                        pageHeight,
-                        pageNumber
-                    ).create()
+                    PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create()
                 )
                 canvas = page.canvas
                 y = 50f
@@ -1017,13 +1033,7 @@ class MainActivity : AppCompatActivity() {
             fun addText(label: String, value: String) {
                 val text = "$label: ${value.ifBlank { "—" }}"
                 val layout = StaticLayout.Builder
-                    .obtain(
-                        text,
-                        0,
-                        text.length,
-                        textPaint,
-                        pageWidth - 100
-                    )
+                    .obtain(text, 0, text.length, textPaint, pageWidth - 100)
                     .setAlignment(Layout.Alignment.ALIGN_NORMAL)
                     .setLineSpacing(1f, 1f)
                     .build()
@@ -1123,26 +1133,14 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.wall_thickness_requirement),
                 wallThicknessRequirement
             )
-            addText(
-                getString(R.string.wall_thickness_actual),
-                wallThicknessActual
-            )
-            addText(
-                getString(R.string.wall_thickness_result),
-                wallThicknessResult
-            )
+            addText(getString(R.string.wall_thickness_actual), wallThicknessActual)
+            addText(getString(R.string.wall_thickness_result), wallThicknessResult)
             addText(
                 getString(R.string.floor_thickness_requirement),
                 floorThicknessRequirement
             )
-            addText(
-                getString(R.string.floor_thickness_actual),
-                floorThicknessActual
-            )
-            addText(
-                getString(R.string.floor_thickness_result),
-                floorThicknessResult
-            )
+            addText(getString(R.string.floor_thickness_actual), floorThicknessActual)
+            addText(getString(R.string.floor_thickness_result), floorThicknessResult)
 
             if (customFields.isNotEmpty()) {
                 addSection(getString(R.string.pdf_custom_fields))
@@ -1226,7 +1224,7 @@ class MainActivity : AppCompatActivity() {
                         photo.comment.value.ifBlank { "—" }.take(80),
                         x,
                         imageTop + cellHeight + 22f,
-                        commentPaint
+                        bodyPaint
                     )
                 }
             }
